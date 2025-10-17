@@ -40,7 +40,14 @@ export default function StatsDialog({ open, handleClose, played, win_percent, cu
     indexAxis: 'y',
     scales: {
       x: { display: false },
-      y: { display: true, grid: { display: false } },
+      y: { 
+        display: true, 
+        grid: { display: false },
+        ticks: {
+          font: { size: 12 },
+          color: theme.palette.text.primary,
+        }
+      },
     },
     plugins: {
       title: {
@@ -48,17 +55,30 @@ export default function StatsDialog({ open, handleClose, played, win_percent, cu
         text: 'Points Distribution',
         font: { size: 16, weight: 'bold' },
         color: theme.palette.text.primary,
+        padding: { bottom: 10 }
       },
       legend: { display: false },
       datalabels: {
         anchor: 'end',
         align: 'end',
         color: theme.palette.text.primary,
-        font: { weight: 'bold' },
+        font: { weight: 'bold', size: 11 },
+        formatter: (value) => value || '',
       },
+      tooltip: {
+        enabled: true,
+      }
     },
     maintainAspectRatio: false,
     responsive: true,
+    layout: {
+      padding: {
+        right: 20,
+        left: 10,
+        top: 10,
+        bottom: 10
+      }
+    }
   };
 
   const handleShare = (platform) => {
@@ -79,9 +99,13 @@ export default function StatsDialog({ open, handleClose, played, win_percent, cu
   };
 
   const StatItem = ({ value, label }) => (
-    <Box sx={{ flex: '1 1 25%', textAlign: 'center', p: 1 }}>
-      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{value}</Typography>
-      <Typography variant="body2" color="text.secondary">{label}</Typography>
+    <Box sx={{ flex: '1 1 25%', textAlign: 'center', p: 1, minWidth: 0 }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+        {value}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.7rem', sm: '0.875rem' } }}>
+        {label}
+      </Typography>
     </Box>
   );
 
@@ -98,31 +122,51 @@ export default function StatsDialog({ open, handleClose, played, win_percent, cu
         } 
       }}
     >
-      <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3 }}>
-        <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>SubtleSolve Stats</Typography>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: { xs: 2, sm: 3 } }}>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+          SubtleSolve Stats
+        </Typography>
         
         <Card elevation={3} sx={{ width: '100%', mb: 2, backgroundColor: theme.palette.background.default }}>
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'nowrap', overflow: 'auto', padding: 1 }}>
-            <StatItem value={played} label="Played" sx={{ flexShrink: 1, minWidth: 'auto', padding: 1 }} />
-            <StatItem value={win_percent} label="Win %" sx={{ flexShrink: 1, minWidth: 'auto', padding: 1 }} />
-            <StatItem value={currentStreak} label="Current Streak" sx={{ flexShrink: 1, minWidth: 'auto', padding: 1 }} />
-            <StatItem value={bestStreak} label="Max Streak" sx={{ flexShrink: 1, minWidth: 'auto', padding: 1 }} />
+          <CardContent sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-around', 
+            flexWrap: 'nowrap', 
+            p: { xs: 1, sm: 2 },
+            '&:last-child': { pb: { xs: 1, sm: 2 } }
+          }}>
+            <StatItem value={played} label="Played" />
+            <StatItem value={win_percent} label="Win %" />
+            <StatItem value={currentStreak} label="Current Streak" />
+            <StatItem value={bestStreak} label="Max Streak" />
           </CardContent>
         </Card>
 
-        
-        <Card elevation={3} sx={{ width: '100%', height: 300, mb: 2, backgroundColor: theme.palette.background.default }}>
-          <CardContent>
-            <Bar data={chartData} options={options} />
+        <Card elevation={3} sx={{ 
+          width: '100%', 
+          mb: 2, 
+          backgroundColor: theme.palette.background.default,
+          overflow: 'hidden'
+        }}>
+          <CardContent sx={{ 
+            p: { xs: 1, sm: 2 },
+            '&:last-child': { pb: { xs: 1, sm: 2 } },
+            height: { xs: 240, sm: 280 },
+            position: 'relative'
+          }}>
+            <Box sx={{ height: '100%', width: '100%' }}>
+              <Bar data={chartData} options={options} />
+            </Box>
           </CardContent>
         </Card>
         
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap', width: '100%' }}>
           <Button 
             variant="contained" 
             onClick={() => handleShare('web')} 
             startIcon={<ShareIcon />}
             fullWidth={isMobile}
+            sx={{ minWidth: isMobile ? 'auto' : 120 }}
           >
             Share
           </Button>
@@ -131,7 +175,11 @@ export default function StatsDialog({ open, handleClose, played, win_percent, cu
             onClick={() => handleShare('twitter')} 
             startIcon={<TwitterIcon />}
             fullWidth={isMobile}
-            sx={{ backgroundColor: '#1DA1F2', '&:hover': { backgroundColor: '#1a91da' } }}
+            sx={{ 
+              backgroundColor: '#1DA1F2', 
+              '&:hover': { backgroundColor: '#1a91da' },
+              minWidth: isMobile ? 'auto' : 120
+            }}
           >
             Share on X
           </Button>

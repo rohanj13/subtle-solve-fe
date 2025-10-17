@@ -33,13 +33,24 @@ export default function AnswerField({ category, answer, onSubmit, gameID, guessL
   }, [guessList]);
 
   const normalizeString = (str) => {
-    return str.toLowerCase().replace(/[\s\W_]+/g, '');
+    return str
+      .toLowerCase()
+      .replace(/^the\s+/, "") // remove leading "the"
+      .replace(/\b(the|river|mountain|desert|lake|sea|ocean)\b/g, "") // remove common suffixes
+      .replace(/[\s\W_]+/g, ""); // remove spaces/punctuation
   };
 
   const checkAnswer = (userAnswer, correctAnswer) => {
-    const normalizedUserAnswer = normalizeString(userAnswer);
-    const normalizedCorrectAnswer = normalizeString(correctAnswer);
-    return stringSimilarity.compareTwoStrings(normalizedUserAnswer, normalizedCorrectAnswer) >= 0.6;
+    const normalizedUser = normalizeString(userAnswer);
+    const normalizedCorrect = normalizeString(correctAnswer);
+
+    const similarity = stringSimilarity.compareTwoStrings(normalizedUser, normalizedCorrect);
+
+    // Dynamic threshold depending on answer length
+    const len = normalizedCorrect.length;
+    const threshold = len <= 5 ? 0.9 : len <= 10 ? 0.75 : 0.6;
+
+    return similarity >= threshold;
   };
 
   const handleSubmit = async () => {
