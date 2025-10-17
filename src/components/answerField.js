@@ -33,24 +33,38 @@ export default function AnswerField({ category, answer, onSubmit, gameID, guessL
   }, [guessList]);
 
   const normalizeString = (str) => {
-    return str
-      .toLowerCase()
-      .replace(/^the\s+/, "") // remove leading "the"
-      .replace(/\b(the|river|mountain|desert|lake|sea|ocean)\b/g, "") // remove common suffixes
-      .replace(/[\s\W_]+/g, ""); // remove spaces/punctuation
+  return str
+    .toLowerCase()
+    .replace(/^the\s+/, "") // remove leading "the"
+    .replace(/\b(the|movie|film|book|river|mountain|desert|lake|sea|ocean)\b/g, "") // remove suffixes
+    .replace(/[\s\W_]+/g, " ") // keep spaces between words for order check
+    .trim();
   };
 
   const checkAnswer = (userAnswer, correctAnswer) => {
     const normalizedUser = normalizeString(userAnswer);
     const normalizedCorrect = normalizeString(correctAnswer);
 
-    const similarity = stringSimilarity.compareTwoStrings(normalizedUser, normalizedCorrect);
+    const similarity = stringSimilarity.compareTwoStrings(
+      normalizedUser.replace(/\s+/g, ""),
+      normalizedCorrect.replace(/\s+/g, "")
+    );
 
-    // Dynamic threshold depending on answer length
+    // Word order penalty
+    const userWords = normalizedUser.split(" ");
+    const correctWords = normalizedCorrect.split(" ");
+    const inOrderCount = userWords.filter(
+      (w, i) => correctWords[i] && correctWords[i].startsWith(w.slice(0, 3))
+    ).length;
+    const orderRatio = inOrderCount / correctWords.length;
+
+    // Final score: combine both metrics
+    const finalScore = (similarity * 0.7) + (orderRatio * 0.3);
+
     const len = normalizedCorrect.length;
-    const threshold = len <= 5 ? 0.9 : len <= 10 ? 0.75 : 0.6;
+    const threshold = len <= 5 ? 0.9 : len <= 10 ? 0.75 : 0.65;
 
-    return similarity >= threshold;
+    return finalScore >= threshold;
   };
 
   const handleSubmit = async () => {
