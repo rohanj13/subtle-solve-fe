@@ -1,6 +1,33 @@
-# Getting Started with Create React App
+# Subtle Solve - Frontend
+
+A React-based frontend application for the Subtle Solve puzzle game. This repository contains the user interface and client-side logic for the application.
+
+**Note:** The backend API is maintained in a separate repository.
+
+## Technology Stack
+
+- **React 18** - UI library
+- **Material-UI (MUI)** - Component library
+- **Tailwind CSS** - Utility-first CSS framework
+- **Keycloak** - Authentication and authorization
+- **Axios** - HTTP client
+- **React Router** - Client-side routing
+- **Chart.js** - Data visualization
+
+## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+```bash
+npm install
+```
 
 ## Available Scripts
 
@@ -45,26 +72,18 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- `src/` - Source code
+  - `components/` - Reusable React components
+  - `hooks/` - Custom React hooks
+  - `services/` - API service integrations
+  - `security/` - Authentication configuration (Keycloak)
+- `public/` - Static assets
+- `build/` - Production build output
 
-### Analyzing the Bundle Size
+## Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The application includes Docker support for containerized deployment. See `README.Docker.md` for more details on building and running the Docker image.
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Additional Resources
